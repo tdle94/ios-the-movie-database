@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct SeeAllView: View {
-    let text: String
+    let navigationTitle: String
 
     var body: some View {
-        Text(text)
+        NavigationView {
+            
+        }
+        .navigationTitle(navigationTitle)
     }
 }
 
 struct SeeAllView_Previews: PreviewProvider {
     static var previews: some View {
-        SeeAllView(text: "hello")
+        SeeAllView(navigationTitle: "hello")
     }
 }
