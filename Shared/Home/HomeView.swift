@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-class HomeViewSearchViewModel: ObservableObject {
-    
-    func search() async throws {
-        
-    }
-}
-
 struct HomeView: View {
     @ObservedObject var viewModel = HomeViewViewModel()
     @State var searchText: String = ""

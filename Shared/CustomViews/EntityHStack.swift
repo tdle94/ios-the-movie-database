@@ -7,12 +7,6 @@
 
 import SwiftUI
 
-struct HomeViewObject: Identifiable {
-    var id: UUID = UUID()
-    let title: String
-    let posterLink: String
-}
-
 struct EntityHStack: View {
     var displayObjects: [HomeViewObject]
 
