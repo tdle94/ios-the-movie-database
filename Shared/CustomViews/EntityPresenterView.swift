@@ -16,24 +16,31 @@ struct EntityPresenterView: View {
             switch phase {
             case .empty:
                 ProgressView()
-                    .frame(width: 250, height: 300, alignment: .center)
+                    .frame(width: 200, height: 300, alignment: .center)
             case .success(let image):
-                VStack(alignment: .leading) {
-                    image
-                        .scaledToFill()
-                    Text(title)
-                        .frame(width: 180, height: 45, alignment: .topLeading)
-                        .lineLimit(2)
+                NavigationLink(destination: Text(title)) {
+                    VStack(alignment: .leading) {
+                        image
+                            .scaledToFill()
+                        Text(title)
+                            .frame(width: 180, height: 45, alignment: .topLeading)
+                            .lineLimit(2)
+                    }
                 }
+                .buttonStyle(.plain)
             case .failure:
-                VStack(alignment: .leading) {
-                    Image(uiImage: UIImage(named: "NoImage")!)
-                        .frame(height: 300)
-                        .scaledToFill()
-                    Text(title)
-                        .frame(width: 180, height: 45, alignment: .topLeading)
-                        .lineLimit(2)
+                NavigationLink(destination: Text(title)) {
+                    VStack(alignment: .leading) {
+                        Image(uiImage: UIImage(named: "NoImage")!)
+                            .resizable()
+                            .frame(width: 200, height: 300)
+                            .scaledToFill()
+                        Text(title)
+                            .frame(width: 180, height: 45, alignment: .topLeading)
+                            .lineLimit(2)
+                    }
                 }
+                .buttonStyle(.plain)
             @unknown default:
                 EmptyView()
             }

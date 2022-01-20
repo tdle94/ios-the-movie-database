@@ -10,10 +10,6 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var viewModel = HomeViewViewModel()
     @State var searchText: String = ""
-    @State private var action: Bool = false
-    @State private var action1: Bool = false
-    @State private var action2: Bool = false
-    @State private var action3: Bool = false
 
     var body: some View {
         NavigationView {
@@ -37,21 +33,17 @@ struct HomeView: View {
                 .padding(.bottom)
                 .buttonStyle(.plain)
                 .isHidden(viewModel.hidePresentView)
+                .listRowSeparator(.hidden)
+                .listRowSeparatorTint(.clear)
 
-                LazyVStack {
+                Section {
                     LatestEntityView(displayObject: viewModel.latest)
                         .padding(.bottom)
-                    
-                    VStack(alignment: .leading) {
-                        HStack {
+
+                    LazyVStack(alignment: .leading) {
+                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text)) {
                             Text(viewModel.text)
                                 .bold()
-                            NavigationLink(destination: SeeAllView(text: "text"), isActive: $action) {
-                                EmptyView()
-                            }
-                        }
-                        .onTapGesture {
-                            action = true
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
                             EntityHStack(displayObjects: viewModel.displayObjects)
@@ -59,35 +51,21 @@ struct HomeView: View {
                     }
                     .padding(.bottom)
 
-
-                    VStack(alignment: .leading) {
-                        HStack {
+                    LazyVStack(alignment: .leading) {
+                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text1)) {
                             Text(viewModel.text1)
                                 .bold()
-                            NavigationLink(destination: SeeAllView(text: "text1"), isActive: $action1) {
-                                EmptyView()
-                            }
                         }
-                        .onTapGesture {
-                            action1 = true
-                        }
-                        
                         ScrollView(.horizontal, showsIndicators: false) {
                             EntityHStack(displayObjects: viewModel.displayObjects1)
                         }
                     }
                     .padding(.bottom)
 
-                    VStack(alignment: .leading) {
-                        HStack {
+                    LazyVStack(alignment: .leading) {
+                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text2)) {
                             Text(viewModel.text2)
                                 .bold()
-                            NavigationLink(destination: SeeAllView(text: "text2"), isActive: $action2) {
-                                EmptyView()
-                            }
-                        }
-                        .onTapGesture {
-                            action2 = true
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
                             EntityHStack(displayObjects: viewModel.displayObjects2)
@@ -95,22 +73,17 @@ struct HomeView: View {
                     }
                     .padding(.bottom)
 
-                    VStack(alignment: .leading) {
-                        HStack {
+                    LazyVStack(alignment: .leading) {
+                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text3)) {
                             Text(viewModel.text3)
                                 .bold()
-                            NavigationLink(destination: SeeAllView(text: "text3"), isActive: $action3) {
-                                EmptyView()
-                            }
-                        }
-                        .onTapGesture {
-                            action3 = true
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
                             EntityHStack(displayObjects: viewModel.displayObjects3)
                         }
                     }
                     .padding(.bottom)
+
                 }
                 .listStyle(.plain)
                 .listRowSeparator(.hidden)
