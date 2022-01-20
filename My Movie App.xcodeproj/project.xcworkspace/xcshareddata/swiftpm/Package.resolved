@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "TMDBAPI",
+        "repositoryURL": "https://github.com/tdle94/TMDBAPI",
+        "state": {
+          "branch": "main",
+          "revision": "382ac39c4dce5d28ba98665142aaffbeb9522732",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
