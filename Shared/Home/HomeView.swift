@@ -98,7 +98,7 @@ struct HomeView: View {
             }
         }
         .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search") {
-           Text("wtf")
+           
         }
         .disabled(viewModel.hidePresentView)
         .task {

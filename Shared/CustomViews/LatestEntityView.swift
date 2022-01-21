@@ -17,23 +17,27 @@ struct LatestEntityView: View {
                 ProgressView()
                     .padding(.bottom)
             case .success(let image):
-                VStack(alignment: .leading, spacing: 10) {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .scaledToFill()
-                    Text(displayObject?.title ?? "")
+                NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .scaledToFill()
+                        Text(displayObject?.title ?? "")
+                    }
                 }
-                .padding(.bottom)
+                .padding([.trailing], -30.0)
             case .failure:
-                VStack(alignment: .leading, spacing: 10) {
-                    Image(uiImage: UIImage(named: "NoImage")!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .scaledToFill()
-                    Text(displayObject?.title ?? "")
+                NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Image(uiImage: UIImage(named: "NoImage")!)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .scaledToFill()
+                        Text(displayObject?.title ?? "")
+                    }
                 }
-                .padding(.bottom)
+                .padding([.trailing], -30.0)
             @unknown default:
                 EmptyView()
                     .padding(.bottom)
