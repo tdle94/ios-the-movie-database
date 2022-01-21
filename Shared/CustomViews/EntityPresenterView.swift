@@ -18,7 +18,7 @@ struct EntityPresenterView: View {
                 ProgressView()
                     .frame(width: 200, height: 300, alignment: .center)
             case .success(let image):
-                NavigationLink(destination: Text(title)) {
+                NavigationLink(destination: EntityDetailView(navigationTitle: title)) {
                     VStack(alignment: .leading) {
                         image
                             .scaledToFill()
@@ -29,7 +29,7 @@ struct EntityPresenterView: View {
                 }
                 .buttonStyle(.plain)
             case .failure:
-                NavigationLink(destination: Text(title)) {
+                NavigationLink(destination: EntityDetailView(navigationTitle: title)) {
                     VStack(alignment: .leading) {
                         Image(uiImage: UIImage(named: "NoImage")!)
                             .resizable()

@@ -97,7 +97,9 @@ struct HomeView: View {
                 try? await viewModel.refresh()
             }
         }
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search")
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search") {
+           Text("wtf")
+        }
         .disabled(viewModel.hidePresentView)
         .task {
             try? await viewModel.initialFetch()
