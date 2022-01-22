@@ -15,13 +15,16 @@ class SearchViewViewModel: ObservableObject {
     @Published var searchText: String = ""
 
     func search() async throws {
-        searchResult = try await searchDB.multiSearch(includeAdult: true, query: searchText).get().results.filter { !$0.title.isEmpty }
+        if searchText.isEmpty {
+            searchResult = []
+        } else {
+            searchResult = try await searchDB.multiSearch(includeAdult: true, query: searchText).get().results.filter { !$0.title.isEmpty }
+        }
     }
 }
 
 struct SearchView: View {
     var searchResult: [MultiSearch.Result]
-    @Environment(\.dismissSearch) var dismissSearch
 
     var body: some View {
         ForEach(searchResult) { item in
@@ -40,13 +43,12 @@ struct SearchView: View {
                         case .failure:
                             Image(uiImage: UIImage(named: "NoImage")!)
                                 .resizable()
-                                .scaledToFill()
                                 .frame(width: 40, height: 80)
                         @unknown default:
                             EmptyView()
                         }
                     }
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 5) {
                         Text(item.title)
                             .font(.headline)
                         Text(item.overview)
