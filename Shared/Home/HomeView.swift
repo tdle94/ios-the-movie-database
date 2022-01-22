@@ -8,78 +8,78 @@
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var viewModel = HomeViewViewModel()
-    @State var searchText: String = ""
+    @StateObject var searchViewModel = SearchViewViewModel()
+    @StateObject var homeViewModel = HomeViewViewModel()
 
     var body: some View {
         NavigationView {
             List {
                 HStack(alignment: .center, spacing: 20) {
                     Button {
-                        viewModel.selected(.movie)
+                        homeViewModel.selected(.movie)
                     } label: {
                         Text("Movie")
                             .font(.title)
-                            .shouldUnderline(viewModel.shouldUnderline)
+                            .shouldUnderline(homeViewModel.shouldUnderline)
                     }
                     Button {
-                        viewModel.selected(.tvshow)
+                        homeViewModel.selected(.tvshow)
                     } label: {
                         Text("TV Show")
                             .font(.title)
-                            .shouldUnderline(!viewModel.shouldUnderline)
+                            .shouldUnderline(!homeViewModel.shouldUnderline)
                     }
                 }
                 .padding(.bottom)
                 .buttonStyle(.plain)
-                .isHidden(viewModel.hidePresentView)
+                .isHidden(homeViewModel.hidePresentView)
                 .listRowSeparator(.hidden)
                 .listRowSeparatorTint(.clear)
 
                 Section {
-                    LatestEntityView(displayObject: viewModel.latest)
+                    LatestEntityView(displayObject: homeViewModel.latest)
                         .padding(.bottom)
 
                     LazyVStack(alignment: .leading) {
-                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text)) {
-                            Text(viewModel.text)
+                        NavigationLink(destination: SeeAllView(navigationTitle: homeViewModel.text)) {
+                            Text(homeViewModel.text)
                                 .bold()
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
-                            EntityHStack(displayObjects: viewModel.displayObjects)
+                            EntityHStack(displayObjects: homeViewModel.displayObjects)
                         }
                     }
                     .padding(.bottom)
 
                     LazyVStack(alignment: .leading) {
-                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text1)) {
-                            Text(viewModel.text1)
+                        NavigationLink(destination: SeeAllView(navigationTitle: homeViewModel.text1)) {
+                            Text(homeViewModel.text1)
                                 .bold()
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
-                            EntityHStack(displayObjects: viewModel.displayObjects1)
+                            EntityHStack(displayObjects: homeViewModel.displayObjects1)
                         }
                     }
                     .padding(.bottom)
 
                     LazyVStack(alignment: .leading) {
-                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text2)) {
-                            Text(viewModel.text2)
+                        NavigationLink(destination: SeeAllView(navigationTitle: homeViewModel.text2)) {
+                            Text(homeViewModel.text2)
                                 .bold()
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
-                            EntityHStack(displayObjects: viewModel.displayObjects2)
+                            EntityHStack(displayObjects: homeViewModel.displayObjects2)
                         }
                     }
                     .padding(.bottom)
 
                     LazyVStack(alignment: .leading) {
-                        NavigationLink(destination: SeeAllView(navigationTitle: viewModel.text3)) {
-                            Text(viewModel.text3)
+                        NavigationLink(destination: SeeAllView(navigationTitle: homeViewModel.text3)) {
+                            Text(homeViewModel.text3)
                                 .bold()
                         }
                         ScrollView(.horizontal, showsIndicators: false) {
-                            EntityHStack(displayObjects: viewModel.displayObjects3)
+                            EntityHStack(displayObjects: homeViewModel.displayObjects3)
                         }
                     }
                     .padding(.bottom)
@@ -88,26 +88,23 @@ struct HomeView: View {
                 .listStyle(.plain)
                 .listRowSeparator(.hidden)
                 .listRowSeparatorTint(.clear)
-                .isHidden(viewModel.hidePresentView)
+                .isHidden(homeViewModel.hidePresentView)
             }
             .listStyle(.plain)
             .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.inline)
             .refreshable {
-                try? await viewModel.refresh()
+                try? await homeViewModel.refresh()
             }
         }
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search") {
-           
-        }
-        .disabled(viewModel.hidePresentView)
+        .disabled(homeViewModel.hidePresentView)
         .task {
-            try? await viewModel.initialFetch()
+            try? await homeViewModel.initialFetch()
         }
         .overlay {
-            PendingStateView(hideInitialProgressView: viewModel.hideInitialProgressView,
-                             hideError: viewModel.hideError,
-                             action: viewModel.refresh)
+            PendingStateView(hideInitialProgressView: homeViewModel.hideInitialProgressView,
+                             hideError: homeViewModel.hideError,
+                             action: homeViewModel.refresh)
         }
     }
 }
