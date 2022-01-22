@@ -6,15 +6,62 @@
 //
 
 import SwiftUI
+import TMDBAPI
+
+@MainActor
+class SearchViewViewModel: ObservableObject {
+    let searchDB = SearchDB()
+    @Published var searchResult: [MultiSearch.Result] = []
+    @Published var searchText: String = ""
+
+    func search() async throws {
+        searchResult = try await searchDB.multiSearch(includeAdult: true, query: searchText).get().results.filter { !$0.title.isEmpty }
+    }
+}
 
 struct SearchView: View {
+    var searchResult: [MultiSearch.Result]
+    @Environment(\.dismissSearch) var dismissSearch
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ForEach(searchResult) { item in
+            NavigationLink(destination: Text(item.title)) {
+                HStack(alignment: .center, spacing: 20) {
+                    AsyncImage(url: URL(string: item.posterLink), transaction: Transaction(animation: .linear)) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(width: 50, height: 100, alignment: .leading)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 40, height: 80)
+                        case .failure:
+                            Image(uiImage: UIImage(named: "NoImage")!)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 40, height: 80)
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(item.title)
+                            .font(.headline)
+                        Text(item.overview)
+                            .lineLimit(2)
+                            .font(.body)
+                    }
+                }
+            }
+            .buttonStyle(.plain)
+        }
     }
 }
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchView()
+        SearchView(searchResult: [])
     }
 }
