@@ -8,7 +8,7 @@
 import Foundation
 
 struct HomeViewObject: Identifiable {
-    var id: UUID = UUID()
+    let id: UUID = UUID()
     let title: String
     let posterLink: String
 }
