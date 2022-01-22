@@ -17,27 +17,33 @@ struct LatestEntityView: View {
                 ProgressView()
                     .padding(.bottom)
             case .success(let image):
-                NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .scaledToFill()
-                        Text(displayObject?.title ?? "")
-                    }
+                VStack(alignment: .leading) {
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
+                    Text(displayObject?.title ?? "")
                 }
-                .padding([.trailing], -30.0)
+                .overlay {
+                    NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
+                        EmptyView()
+                    }
+                    .opacity(0)
+                }
             case .failure:
-                NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Image(uiImage: UIImage(named: "NoImage")!)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .scaledToFill()
-                        Text(displayObject?.title ?? "")
-                    }
+                VStack(alignment: .leading) {
+                    Image(uiImage: UIImage(named: "NoImage")!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .scaledToFill()
+                    Text(displayObject?.title ?? "")
                 }
-                .padding([.trailing], -30.0)
+                .overlay {
+                    NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
+                        EmptyView()
+                    }
+                    .opacity(0)
+                }
             @unknown default:
                 EmptyView()
                     .padding(.bottom)
