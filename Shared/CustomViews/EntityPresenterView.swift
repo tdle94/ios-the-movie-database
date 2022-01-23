@@ -8,34 +8,33 @@
 import SwiftUI
 
 struct EntityPresenterView: View {
-    let title: String
-    let url: String
+    var displayObject: HomeViewObject
 
     var body: some View {
-        AsyncImage(url: URL(string: url), transaction: Transaction(animation: .linear)) { phase in
+        AsyncImage(url: URL(string: displayObject.posterLink), transaction: Transaction(animation: .linear)) { phase in
             switch phase {
             case .empty:
                 ProgressView()
                     .frame(width: 200, height: 300, alignment: .center)
             case .success(let image):
-                NavigationLink(destination: EntityDetailView(navigationTitle: title)) {
+                NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: displayObject.id, navigationTitle: displayObject.title))) {
                     VStack(alignment: .leading) {
                         image
                             .scaledToFill()
-                        Text(title)
+                        Text(displayObject.title)
                             .frame(width: 180, height: 45, alignment: .topLeading)
                             .lineLimit(2)
                     }
                 }
                 .buttonStyle(.plain)
             case .failure:
-                NavigationLink(destination: EntityDetailView(navigationTitle: title)) {
+                NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: displayObject.id, navigationTitle: displayObject.title))) {
                     VStack(alignment: .leading) {
                         Image(uiImage: UIImage(named: "NoImage")!)
                             .resizable()
                             .frame(width: 200, height: 300)
                             .scaledToFill()
-                        Text(title)
+                        Text(displayObject.title)
                             .frame(width: 180, height: 45, alignment: .topLeading)
                             .lineLimit(2)
                     }
@@ -50,6 +49,6 @@ struct EntityPresenterView: View {
 
 struct EntityPresenterView_Previews: PreviewProvider {
     static var previews: some View {
-        EntityPresenterView(title: "Santana", url: "https://image.tmdb.org/t/p/w200/9Rj8l6gElLpRL7Kj17iZhrT5Zuw.jpg")
+        EntityPresenterView(displayObject: HomeViewObject(id: 0, title: "", posterLink: ""))
     }
 }
