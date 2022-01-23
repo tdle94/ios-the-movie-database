@@ -11,42 +11,44 @@ struct LatestEntityView: View {
     var displayObject: HomeViewObject?
 
     var body: some View {
-        AsyncImage(url: URL(string: displayObject?.posterLink ?? ""), transaction: Transaction(animation: .linear)) { phase in
-            switch phase {
-            case .empty:
-                ProgressView()
-                    .padding(.bottom)
-            case .success(let image):
-                VStack(alignment: .leading) {
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .scaledToFill()
-                    Text(displayObject?.title ?? "")
-                }
-                .overlay {
-                    NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
-                        EmptyView()
+        if let object = displayObject {
+            AsyncImage(url: URL(string: object.posterLink), transaction: Transaction(animation: .linear)) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                        .padding(.bottom)
+                case .success(let image):
+                    VStack(alignment: .leading) {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .scaledToFill()
+                        Text(displayObject?.title ?? "")
                     }
-                    .opacity(0)
-                }
-            case .failure:
-                VStack(alignment: .leading) {
-                    Image(uiImage: UIImage(named: "NoImage")!)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .scaledToFill()
-                    Text(displayObject?.title ?? "")
-                }
-                .overlay {
-                    NavigationLink(destination: EntityDetailView(navigationTitle: displayObject?.title ?? "")) {
-                        EmptyView()
+                    .overlay {
+                        NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: object.id, navigationTitle: object.title))) {
+                            EmptyView()
+                        }
+                        .opacity(0)
                     }
-                    .opacity(0)
+                case .failure:
+                    VStack(alignment: .leading) {
+                        Image(uiImage: UIImage(named: "NoImage")!)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .scaledToFill()
+                        Text(object.title)
+                    }
+                    .overlay {
+                        NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: object.id, navigationTitle: object.title))) {
+                            EmptyView()
+                        }
+                        .opacity(0)
+                    }
+                @unknown default:
+                    EmptyView()
+                        .padding(.bottom)
                 }
-            @unknown default:
-                EmptyView()
-                    .padding(.bottom)
             }
         }
     }
