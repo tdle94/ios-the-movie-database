@@ -8,27 +8,12 @@
 import SwiftUI
 import TMDBAPI
 
-@MainActor
-class SearchViewViewModel: ObservableObject {
-    let searchDB = SearchDB()
-    @Published var searchResult: [MultiSearch.Result] = []
-    @Published var searchText: String = ""
-
-    func search() async throws {
-        if searchText.isEmpty {
-            searchResult = []
-        } else {
-            searchResult = try await searchDB.multiSearch(includeAdult: true, query: searchText).get().results.filter { !$0.title.isEmpty }
-        }
-    }
-}
-
 struct SearchView: View {
     var searchResult: [MultiSearch.Result]
 
     var body: some View {
         ForEach(searchResult) { item in
-            NavigationLink(destination: Text(item.title)) {
+            NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: item.id, navigationTitle: item.title))) {
                 HStack(alignment: .center, spacing: 20) {
                     AsyncImage(url: URL(string: item.posterLink), transaction: Transaction(animation: .linear)) { phase in
                         switch phase {
@@ -50,6 +35,7 @@ struct SearchView: View {
                     }
                     VStack(alignment: .leading, spacing: 5) {
                         Text(item.title)
+                            .lineLimit(1)
                             .font(.headline)
                         Text(item.overview)
                             .lineLimit(2)
