@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import TMDBAPI
 
 struct EntityPresenterView: View {
-    var displayObject: HomeViewObject
+    var displayObject: DisplayObject
 
     var body: some View {
         AsyncImage(url: URL(string: displayObject.posterLink), transaction: Transaction(animation: .linear)) { phase in
@@ -49,6 +50,6 @@ struct EntityPresenterView: View {
 
 struct EntityPresenterView_Previews: PreviewProvider {
     static var previews: some View {
-        EntityPresenterView(displayObject: HomeViewObject(id: 0, title: "", posterLink: ""))
+        EntityPresenterView(displayObject: DisplayObject(id: 0, title: "", posterLink: ""))
     }
 }

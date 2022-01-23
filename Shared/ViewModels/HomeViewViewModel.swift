@@ -6,17 +6,18 @@
 //
 
 import Foundation
+import TMDBAPI
 import SwiftUI
 
 class HomeViewViewModel: ObservableObject {
     @ObservedObject var movieFetcherViewModel = MovieFetcherViewModel()
     @ObservedObject var tvShowFetcherViewModel = TVShowFetcherViewModel()
 
-    @Published var displayObjects: [HomeViewObject] = []
-    @Published var displayObjects1: [HomeViewObject] = []
-    @Published var displayObjects2: [HomeViewObject] = []
-    @Published var displayObjects3: [HomeViewObject] = []
-    @Published var latest: HomeViewObject?
+    @Published var displayObjects: [DisplayObject] = []
+    @Published var displayObjects1: [DisplayObject] = []
+    @Published var displayObjects2: [DisplayObject] = []
+    @Published var displayObjects3: [DisplayObject] = []
+    @Published var latest: DisplayObject?
 
     @Published var hideInitialProgressView = false
     @Published var hideError = false

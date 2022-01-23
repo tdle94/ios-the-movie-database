@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import TMDBAPI
 
 struct LatestEntityView: View {
-    var displayObject: HomeViewObject?
+    var displayObject: DisplayObject?
 
     var body: some View {
         if let object = displayObject {

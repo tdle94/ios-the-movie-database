@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
+import TMDBAPI
 
 struct EntityHStack: View {
-    var displayObjects: [HomeViewObject]
+    var displayObjects: [DisplayObject]
 
     var body: some View {
         LazyHGrid(rows: [GridItem(.fixed(100))], alignment: .top) {

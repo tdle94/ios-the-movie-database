@@ -13,7 +13,7 @@ import SwiftUI
 class TVShowViewModel: ObservableObject {
     let tvShowDB = TVShowDB()
 
-    @Published var homeViewObjects: [HomeViewObject] = []
+    @Published var homeViewObjects: [DisplayObject] = []
     @Published var latestMovieImageURL: URL?
 
     func fetch() async throws {
@@ -23,35 +23,35 @@ class TVShowViewModel: ObservableObject {
 
 class OnTheAirTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
-        let tvShowResults = try await tvShowDB.onTheAir().get().results
-        homeViewObjects = tvShowResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalName, posterLink: $0.posterLink) }
+        let tvShowResults = try await tvShowDB.onTheAir().get()
+        homeViewObjects = tvShowResults.displayObjects
     }
 }
 
 class PopularTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
-        let tvShowResults = try await tvShowDB.popular().get().results
-        homeViewObjects = tvShowResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalName, posterLink: $0.posterLink) }
+        let tvShowResults = try await tvShowDB.popular().get()
+        homeViewObjects = tvShowResults.displayObjects
     }
 }
 
 class TopRatedTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
-        let tvShowResults = try await tvShowDB.topRated().get().results
-        homeViewObjects = tvShowResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalName, posterLink: $0.posterLink) }
+        let tvShowResults = try await tvShowDB.topRated().get()
+        homeViewObjects = tvShowResults.displayObjects
     }
 }
 
 class AiringTodayTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
-        let tvShowResults = try await tvShowDB.airingToday().get().results
-        homeViewObjects = tvShowResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalName, posterLink: $0.posterLink) }
+        let tvShowResults = try await tvShowDB.airingToday().get()
+        homeViewObjects = tvShowResults.displayObjects
     }
 }
 
 class LatestTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
         let latestTVShowResult = try await tvShowDB.latest(language: Locale.currentCountryAndLanguageCode).get()
-        homeViewObjects = [HomeViewObject(id: latestTVShowResult.id, title: latestTVShowResult.originalName, posterLink: latestTVShowResult.posterLink)]
+        homeViewObjects = [latestTVShowResult.displayObject]
     }
 }

@@ -15,7 +15,7 @@ class EntityDetailViewViewModel: ObservableObject {
     let movieDB = MovieDB()
     var mediaType: MediaType = .backdrop
     @Published var mediaSelected: Bool = true
-    @Published var entityDetail: DisplayObject = DisplayObject(id: 0, titleWithYear: "", backdropLink: "", posterLink: "", overview: "", tagline: "")
+    @Published var entityDetail: DisplayObject = DisplayObject(id: 0, titleWithYear: "", title: "", backdropLink: "", posterLink: "", overview: "", tagline: "")
     
     enum MediaType: String {
         case backdrop = "Backdrops"

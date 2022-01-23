@@ -11,7 +11,7 @@ import SwiftUI
 
 @MainActor
 class MovieViewModel: ObservableObject {
-    @Published var homeViewObjects: [HomeViewObject] = []
+    @Published var homeViewObjects: [DisplayObject] = []
 
     let movieDB = MovieDB()
     
@@ -22,29 +22,29 @@ class MovieViewModel: ObservableObject {
 
 class PopularMovieViewModel: MovieViewModel {
     override func fetch() async throws {
-        let movieResults = try await movieDB.popular().get().results
-        homeViewObjects = movieResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalTitle, posterLink: $0.posterLink) }
+        let movieResults = try await movieDB.popular().get()
+        homeViewObjects = movieResults.displayObjects
     }
 }
 
 class NowPlayingMovieViewModel: MovieViewModel {
     override func fetch() async throws {
-        let movieResults = try await movieDB.nowPlaying().get().results
-        homeViewObjects = movieResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalTitle, posterLink: $0.posterLink) }
+        let movieResults = try await movieDB.nowPlaying().get()
+        homeViewObjects = movieResults.displayObjects
     }
 }
 
 class UpcomingMovieViewModel: MovieViewModel {
     override func fetch() async throws {
-        let movieResults = try await movieDB.upcoming().get().results
-        homeViewObjects = movieResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalTitle, posterLink: $0.posterLink) }
+        let movieResults = try await movieDB.upcoming().get()
+        homeViewObjects = movieResults.displayObjects
     }
 }
 
 class TopRatedMovieViewModel: MovieViewModel {
     override func fetch() async throws {
-        let movieResults = try await movieDB.topRated().get().results
-        homeViewObjects = movieResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalTitle, posterLink: $0.posterLink) }
+        let movieResults = try await movieDB.topRated().get()
+        homeViewObjects = movieResults.displayObjects
     }
 }
 
@@ -52,6 +52,6 @@ class LatestMovieViewModel: MovieViewModel {
     override func fetch() async throws {
         let latestMovie = try await movieDB.latest(language: Locale.currentCountryAndLanguageCode).get()
         
-        homeViewObjects = [HomeViewObject(id: latestMovie.id,title: latestMovie.originalTitle, posterLink: latestMovie.posterLink)]
+        homeViewObjects = [latestMovie.displayObject]
     }
 }
