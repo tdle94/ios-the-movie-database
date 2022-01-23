@@ -37,7 +37,7 @@ struct EntityDetailView: View {
             .listRowSeparator(.hidden)
             .padding(.top)
             .padding(.leading, 0)
-            
+
             Text(viewModel.entityDetail.titleWithYear)
                 .font(.title2)
                 .listRowSeparator(.hidden)
@@ -48,7 +48,7 @@ struct EntityDetailView: View {
                     .italic()
                     .padding(.top)
             }
-            
+
             if !viewModel.entityDetail.overview.isEmpty {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("Overview")
@@ -60,6 +60,70 @@ struct EntityDetailView: View {
                 .listRowSeparator(.hidden)
                 .padding(.top)
             }
+            
+            VStack(alignment: .leading, spacing: 10) {
+                NavigationLink(destination: AllImageView(navigationTitle: viewModel.mediaType.rawValue)) {
+                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                        Text("Media")
+                            .font(.headline)
+                        
+                        HStack(alignment: .firstTextBaseline, spacing: 10) {
+                            Button {
+                                viewModel.selectMediaType(.backdrop)
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                                    Text("Backdrops")
+                                        .shouldUnderline(viewModel.mediaSelected)
+                                    Text("\(viewModel.entityDetail.image?.backdrops.count ?? 0)")
+                                        .font(.caption)
+                                }
+                            }
+                            .buttonStyle(.plain)
+
+                            Button {
+                                viewModel.selectMediaType(.poster)
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                                    Text("Posters")
+                                        .shouldUnderline(!viewModel.mediaSelected)
+                                    Text("\(viewModel.entityDetail.image?.posters.count ?? 0)")
+                                        .font(.caption)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.leading)
+                    }
+                    .listRowSeparator(.visible)
+                }
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    LazyHStack(alignment: .top, spacing: 10) {
+                        ForEach(viewModel.entityDetail.displayImageLinks, id: \.self) { path in
+                            AsyncImage(url: URL(string: path), transaction: Transaction(animation: .linear)) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                        .frame(width: 500, height: 300)
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 500, height: 300)
+                                case .failure:
+                                    Image(uiImage: UIImage(named: "NoImage")!)
+                                        .resizable()
+                                        .frame(width: 500, height: 300)
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .listRowSeparator(.hidden)
+            .padding(.top)
         }
         .listStyle(.plain)
         .listRowSeparator(.hidden)
