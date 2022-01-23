@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+class EntityDetailViewViewModel: ObservableObject {
+    let id: Int
+    let navigationTitle: String
+
+    init(id: Int, navigationTitle: String) {
+        self.id = id
+        self.navigationTitle = navigationTitle
+    }
+}
