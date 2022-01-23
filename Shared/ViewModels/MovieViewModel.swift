@@ -52,13 +52,6 @@ class LatestMovieViewModel: MovieViewModel {
     override func fetch() async throws {
         let latestMovie = try await movieDB.latest(language: Locale.currentCountryAndLanguageCode).get()
         
-        var posterPath = latestMovie.posterPath ?? latestMovie.backdropPath
-
-        if posterPath == nil {
-            let images = try await movieDB.images(id: latestMovie.id).get()
-            posterPath = images.posters.first?.filePath ?? images.backdrops.first?.filePath
-        }
-        
-        homeViewObjects = [HomeViewObject(id: latestMovie.id,title: latestMovie.originalTitle, posterLink: "https://image.tmdb.org/t/p/original/" + (posterPath ?? ""))]
+        homeViewObjects = [HomeViewObject(id: latestMovie.id,title: latestMovie.originalTitle, posterLink: latestMovie.posterLink)]
     }
 }
