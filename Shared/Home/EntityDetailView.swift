@@ -8,18 +8,18 @@
 import SwiftUI
 
 struct EntityDetailView: View {
-    let navigationTitle: String
+    var viewModel: EntityDetailViewViewModel
 
     var body: some View {
         NavigationView {
             
         }
-        .navigationTitle(navigationTitle)
+        .navigationTitle(viewModel.navigationTitle)
     }
 }
 
 struct EntityDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        EntityDetailView(navigationTitle: "")
+        EntityDetailView(viewModel: EntityDetailViewViewModel(id: 0, navigationTitle: ""))
     }
 }
