@@ -16,6 +16,17 @@ struct HomeView: View {
             List {
                 Section {
                     SearchView(searchResult: searchViewModel.searchResult)
+                    
+                    if searchViewModel.loadMore {
+                        ProgressView()
+                            .frame(width: UIScreen.main.bounds.width,alignment: .center)
+                            .onAppear {
+                                Task {
+                                    try? await searchViewModel.search()
+                                }
+                            }
+   
+                    }
                 }
                 .listStyle(.plain)
                 .listRowSeparator(.hidden)
@@ -102,6 +113,7 @@ struct HomeView: View {
             .listStyle(.plain)
             .navigationTitle("Home")
             .navigationBarTitleDisplayMode(.inline)
+            .disableAutocorrection(true)
             .searchable(text: $searchViewModel.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search") {
                 EmptyView()
             }
