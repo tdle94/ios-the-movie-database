@@ -45,13 +45,13 @@ class TopRatedTVShowViewModel: TVShowViewModel {
 class AiringTodayTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
         let tvShowResults = try await tvShowDB.airingToday().get().results
-        homeViewObjects = tvShowResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalName, posterLink: "https://image.tmdb.org/t/p/w200" + ($0.posterPath ?? "")) }
+        homeViewObjects = tvShowResults.compactMap { HomeViewObject(id: $0.id, title: $0.originalName, posterLink: $0.posterLink) }
     }
 }
 
 class LatestTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
         let latestTVShowResult = try await tvShowDB.latest(language: Locale.currentCountryAndLanguageCode).get()
-        homeViewObjects = [HomeViewObject(id: latestTVShowResult.id, title: latestTVShowResult.originalName, posterLink: "https://image.tmdb.org/t/p/w200" + (latestTVShowResult.posterPath ?? ""))]
+        homeViewObjects = [HomeViewObject(id: latestTVShowResult.id, title: latestTVShowResult.originalName, posterLink: latestTVShowResult.posterLink)]
     }
 }
