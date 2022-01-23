@@ -20,23 +20,27 @@ class SearchViewViewModel: ObservableObject {
     private(set) var maxPage: Int = -1
 
     func search() async throws {
-        guard !isFetching else { return }
-        guard currentPage != maxPage else {
-            loadMore = false
-            return
-        }
-        
         defer {
             isFetching = false
         }
 
-        isFetching = true
-        
+        if isFetching {
+            return
+        }
+
         if searchText != oldSearchText {
             oldSearchText = searchText
             searchResult = []
             currentPage = 0
+            maxPage = -1
         }
+
+        if currentPage == maxPage {
+            loadMore = false
+            return
+        }
+
+        isFetching = true
 
         if searchText.isEmpty {
             searchResult = []
