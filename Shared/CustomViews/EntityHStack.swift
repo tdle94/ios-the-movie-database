@@ -12,7 +12,7 @@ struct EntityHStack: View {
     var displayObjects: [DisplayObject]
 
     var body: some View {
-        LazyHGrid(rows: [GridItem(.fixed(100))], alignment: .top) {
+        LazyHStack {
             ForEach(displayObjects) { item in
                 EntityPresenterView(displayObject: item)
             }
