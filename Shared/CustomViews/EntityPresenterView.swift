@@ -18,7 +18,7 @@ struct EntityPresenterView: View {
                 ProgressView()
                     .frame(width: 200, height: 300, alignment: .center)
             case .success(let image):
-                NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: displayObject.id, navigationTitle: displayObject.title))) {
+                NavigationLink(destination: displayObject.detailViewViewModel) {
                     VStack(alignment: .leading) {
                         image
                             .scaledToFill()
@@ -29,7 +29,7 @@ struct EntityPresenterView: View {
                 }
                 .buttonStyle(.plain)
             case .failure:
-                NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: displayObject.id, navigationTitle: displayObject.title))) {
+                NavigationLink(destination: displayObject.detailViewViewModel) {
                     VStack(alignment: .leading) {
                         Image(uiImage: UIImage(named: "NoImage")!)
                             .resizable()
@@ -50,6 +50,6 @@ struct EntityPresenterView: View {
 
 struct EntityPresenterView_Previews: PreviewProvider {
     static var previews: some View {
-        EntityPresenterView(displayObject: DisplayObject(id: 0, title: "", posterLink: ""))
+        EntityPresenterView(displayObject: DisplayObject(id: 0, type: .movie, title: "", posterLink: ""))
     }
 }
