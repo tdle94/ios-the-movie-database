@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+extension Array {
+    func getPrefix(_ maxLength: Int) -> [Element] {
+        return Array(self.prefix(maxLength))
+    }
+}
