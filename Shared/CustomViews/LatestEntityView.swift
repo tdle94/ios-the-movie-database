@@ -24,10 +24,10 @@ struct LatestEntityView: View {
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .scaledToFill()
-                        Text(displayObject?.title ?? "")
+                        Text(object.title)
                     }
                     .overlay {
-                        NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: object.id, navigationTitle: object.title))) {
+                        NavigationLink(destination: object.detailViewViewModel) {
                             EmptyView()
                         }
                         .opacity(0)
@@ -41,7 +41,7 @@ struct LatestEntityView: View {
                         Text(object.title)
                     }
                     .overlay {
-                        NavigationLink(destination: EntityDetailView(viewModel: EntityDetailViewViewModel(id: object.id, navigationTitle: object.title))) {
+                        NavigationLink(destination: object.detailViewViewModel) {
                             EmptyView()
                         }
                         .opacity(0)
