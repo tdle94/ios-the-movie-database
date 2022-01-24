@@ -171,6 +171,7 @@ struct EntityDetailView: View {
         .listStyle(.plain)
         .listRowSeparator(.hidden)
         .listRowSeparatorTint(.clear)
+        .padding(.bottom)
         .navigationTitle(viewModel.navigationTitle)
         .task {
             try? await viewModel.fetchDetail()
