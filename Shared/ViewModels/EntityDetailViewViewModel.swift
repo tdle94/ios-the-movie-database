@@ -7,15 +7,19 @@
 
 import Foundation
 import TMDBAPI
+import SwiftUI
 
 @MainActor
 class EntityDetailViewViewModel: ObservableObject {
     let id: Int
     let navigationTitle: String
-    let movieDB = MovieDB()
     var mediaType: MediaType = .backdrop
     @Published var mediaSelected: Bool = true
-    @Published var entityDetail: DisplayObject = DisplayObject(id: 0, titleWithYear: "", title: "", backdropLink: "", posterLink: "", overview: "", tagline: "")
+    @Published var entityDetail: DisplayObject = DisplayObject(id: 0, type: .movie, titleWithYear: "", title: "", backdropLink: "", posterLink: "", overview: "", tagline: "")
+
+    var imageWidth: CGFloat {
+        return mediaType == .backdrop ? 500 : 200
+    }
     
     enum MediaType: String {
         case backdrop = "Backdrops"
@@ -28,26 +32,51 @@ class EntityDetailViewViewModel: ObservableObject {
     }
     
     func fetchDetail() async throws {
-        do {
-            let detailResponse = try await movieDB.detail(id: id).get()
-            let imageResponse = try await movieDB.images(id: id, language: "").get()
-            entityDetail = detailResponse.displayObject
-            entityDetail.image = imageResponse
-            entityDetail.displayImageLinks = Array(imageResponse.backdropLinks.prefix(5))
-        } catch let error {
-            print(error)
-        }
+        // Implement in subview
     }
 
     func selectMediaType(_ type: MediaType) {
         mediaSelected.toggle()
         switch type {
         case .backdrop:
-            entityDetail.displayImageLinks = Array(entityDetail.image?.backdropLinks.prefix(5) ?? [])
+            entityDetail.displayImageLinks = entityDetail.image?.backdropLinks.getPrefix(5) ?? []
             mediaType = .backdrop
         case .poster:
-            entityDetail.displayImageLinks = Array(entityDetail.image?.posterLinks.prefix(5) ?? [])
+            entityDetail.displayImageLinks = entityDetail.image?.posterLinks.getPrefix(5) ?? []
             mediaType = .poster
+        }
+    }
+}
+
+class MovieDetailViewViewModel: EntityDetailViewViewModel {
+    let movieDB = MovieDB()
+
+    override func fetchDetail() async throws {
+        do {
+            let detailResponse = try await movieDB.detail(id: id).get()
+            let imageResponse = try await movieDB.images(id: id, language: "").get()
+            entityDetail = detailResponse.displayObject
+            entityDetail.image = imageResponse
+            entityDetail.displayImageLinks = imageResponse.backdropLinks.getPrefix(5)
+        } catch let error {
+            print(error)
+        }
+    }
+
+}
+
+class TVShowDetailViewViewModel: EntityDetailViewViewModel {
+    let tvshowDB = TVShowDB()
+    
+    override func fetchDetail() async throws {
+        do {
+            let detailResponse = try await tvshowDB.detail(id: id).get()
+            let imageResponse = try await tvshowDB.images(id: id, language: "").get()
+            entityDetail = detailResponse.displayObject
+            entityDetail.image = imageResponse
+            entityDetail.displayImageLinks = imageResponse.backdropLinks.getPrefix(5)
+        } catch let error {
+            print(error)
         }
     }
 }
