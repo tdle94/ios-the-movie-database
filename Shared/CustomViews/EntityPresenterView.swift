@@ -21,6 +21,8 @@ struct EntityPresenterView: View {
                 NavigationLink(destination: displayObject.detailViewViewModel) {
                     VStack(alignment: .leading) {
                         image
+                            .resizable()
+                            .frame(width: 200, height: 300)
                             .scaledToFill()
                         Text(displayObject.title)
                             .frame(width: 180, height: 45, alignment: .topLeading)
