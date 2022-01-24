@@ -63,7 +63,7 @@ struct EntityDetailView: View {
             
             VStack(alignment: .leading, spacing: 10) {
                 NavigationLink(destination: AllImageView(navigationTitle: viewModel.mediaType.rawValue)) {
-                    HStack(alignment: .firstTextBaseline, spacing: 0) {
+                    HStack {
                         Text("Media")
                             .font(.headline)
                         
@@ -124,6 +124,49 @@ struct EntityDetailView: View {
             }
             .listRowSeparator(.hidden)
             .padding(.top)
+            
+            VStack(alignment: .leading, spacing: 10) {
+                NavigationLink(destination: EmptyView()) {
+                    HStack {
+                        Text("See Also")
+                            .font(.headline)
+
+                        HStack(alignment: .firstTextBaseline, spacing: 10) {
+                            Button {
+                                viewModel.selectSeeAlsoType(.recommend)
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                                    Text("Recommend")
+                                        .shouldUnderline(viewModel.seeAlsoTypeSelected)
+                                    Text("\(viewModel.entityDetail.totalRecommends)")
+                                        .font(.caption)
+                                }
+                            }
+                            .buttonStyle(.plain)
+
+                            Button {
+                                viewModel.selectSeeAlsoType(.similar)
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                                    Text("Similar")
+                                        .shouldUnderline(!viewModel.seeAlsoTypeSelected)
+                                    Text("\(viewModel.entityDetail.totalSimilars)")
+                                        .font(.caption)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.leading)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    EntityHStack(displayObjects: viewModel.entityDetail.displaySameObjects)
+                }
+            }
+            .listRowSeparator(.hidden)
+            .padding(.top)
         }
         .listStyle(.plain)
         .listRowSeparator(.hidden)
@@ -131,6 +174,9 @@ struct EntityDetailView: View {
         .navigationTitle(viewModel.navigationTitle)
         .task {
             try? await viewModel.fetchDetail()
+        }
+        .onDisappear {
+            viewModel.resetSelectionWhenViewDissapear()
         }
     }
 }
