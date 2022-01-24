@@ -98,7 +98,7 @@ struct EntityDetailView: View {
                 }
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(alignment: .top, spacing: 10) {
+                    LazyHStack(alignment: .top, spacing: 0) {
                         ForEach(viewModel.entityDetail.displayImageLinks, id: \.self) { path in
                             AsyncImage(url: URL(string: path), transaction: Transaction(animation: .linear)) { phase in
                                 switch phase {
@@ -108,12 +108,12 @@ struct EntityDetailView: View {
                                 case .success(let image):
                                     image
                                         .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 500, height: 300)
+                                        .frame(width: viewModel.imageWidth, height: 300)
                                 case .failure:
                                     Image(uiImage: UIImage(named: "NoImage")!)
                                         .resizable()
-                                        .frame(width: 500, height: 300)
+                                        .scaledToFill()
+                                        .frame(width: viewModel.imageWidth, height: 300)
                                 @unknown default:
                                     EmptyView()
                                 }
