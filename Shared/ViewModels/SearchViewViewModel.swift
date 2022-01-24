@@ -11,7 +11,7 @@ import TMDBAPI
 @MainActor
 class SearchViewViewModel: ObservableObject {
     let searchDB = SearchDB()
-    @Published var searchResult: [MultiSearch.Result] = []
+    @Published var searchResult: [DisplayObject] = []
     @Published var searchText: String = ""
     private(set) var oldSearchText: String = ""
     private(set) var loadMore: Bool = false
@@ -47,7 +47,7 @@ class SearchViewViewModel: ObservableObject {
             loadMore = false
         } else {
             let response = try await searchDB.multiSearch(page: currentPage + 1, includeAdult: true, query: searchText).get()
-            searchResult.append(contentsOf: response.results.filter { !$0.title.isEmpty })
+            searchResult.append(contentsOf: response.displayObjects)
             maxPage = response.totalPages
 
             if currentPage + 1 <= maxPage {
