@@ -62,7 +62,7 @@ struct EntityDetailView: View {
             }
             
             VStack(alignment: .leading, spacing: 10) {
-                NavigationLink(destination: AllImageView(navigationTitle: viewModel.mediaType.rawValue)) {
+                NavigationLink(destination: AllImageView(navigationTitle: viewModel.mediaType.rawValue, imagesLink: viewModel.allDisplayImageLinks)) {
                     HStack {
                         Text("Media")
                             .font(.headline)
@@ -110,10 +110,7 @@ struct EntityDetailView: View {
                                         .resizable()
                                         .frame(width: viewModel.imageWidth, height: 300)
                                 case .failure:
-                                    Image(uiImage: UIImage(named: "NoImage")!)
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: viewModel.imageWidth, height: 300)
+                                    EmptyView()
                                 @unknown default:
                                     EmptyView()
                                 }
@@ -171,13 +168,12 @@ struct EntityDetailView: View {
         .listStyle(.plain)
         .listRowSeparator(.hidden)
         .listRowSeparatorTint(.clear)
-        .padding(.bottom)
         .navigationTitle(viewModel.navigationTitle)
         .task {
             try? await viewModel.fetchDetail()
         }
-        .onDisappear {
-            viewModel.resetSelectionWhenViewDissapear()
+        .onAppear {
+            viewModel.resetSelection()
         }
     }
 }
