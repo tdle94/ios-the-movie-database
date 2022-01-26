@@ -22,7 +22,11 @@ class EntityDetailViewViewModel: ObservableObject {
     var imageWidth: CGFloat {
         return mediaType == .backdrop ? 500 : 200
     }
-    
+
+    var allDisplayImageLinks: [String] {
+        return mediaType == .backdrop ? (entityDetail.image?.backdropLinks ?? []) : (entityDetail.image?.posterLinks ?? [])
+    }
+
     enum MediaType: String {
         case backdrop = "Backdrops"
         case poster = "Posters"
@@ -71,9 +75,11 @@ class EntityDetailViewViewModel: ObservableObject {
         }
     }
 
-    func resetSelectionWhenViewDissapear() {
-        selectMediaType(.backdrop)
-        selectSeeAlsoType(.recommend)
+    func resetSelection() {
+        mediaSelected = true
+        mediaType = .backdrop
+        seeAlsoTypeSelected = true
+        seeAlsoType = .recommend
     }
 }
 
