@@ -11,8 +11,11 @@ import TMDBAPI
 extension DisplayObject {
     @MainActor
     var detailViewViewModel: EntityDetailView {
-        return type == .movie
-        ? EntityDetailView(viewModel: MovieDetailViewViewModel(id: id, navigationTitle: title))
-        : EntityDetailView(viewModel: TVShowDetailViewViewModel(id: id, navigationTitle: title))
+        if type == .movie {
+            return EntityDetailView(viewModel: MovieDetailViewViewModel(id: id, navigationTitle: title))
+        } else if type == .tvshow {
+            return EntityDetailView(viewModel: TVShowDetailViewViewModel(id: id, navigationTitle: title))
+        }
+        return EntityDetailView(viewModel: PeopleDetailViewViewModel(id: 0, navigationTitle: ""))
     }
 }

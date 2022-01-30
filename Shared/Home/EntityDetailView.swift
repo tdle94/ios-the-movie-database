@@ -42,6 +42,14 @@ struct EntityDetailView: View {
                 .font(.title2)
                 .listRowSeparator(.hidden)
             
+            HStack {
+                VStack {
+                    Text("Status")
+                        .bold()
+                        .font(.title3)
+                }
+            }
+            
             if !viewModel.entityDetail.tagline.isEmpty {
                 Text(viewModel.entityDetail.tagline)
                     .font(.body)
@@ -61,6 +69,50 @@ struct EntityDetailView: View {
                 .padding(.top)
             }
             
+            
+            VStack(alignment: .leading, spacing: 10) {
+                NavigationLink(destination: EmptyView()) {
+                    HStack {
+                        Text("Credit")
+                            .font(.headline)
+                        
+                        HStack(alignment: .firstTextBaseline, spacing: 10) {
+                            Button {
+                                viewModel.selectCreditType(.cast)
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                                    Text("Casts")
+                                        .shouldUnderline(viewModel.creditTypeSelected)
+                                    Text("\(viewModel.entityDetail.credits.cast.count)")
+                                        .font(.caption)
+                                }
+                            }
+                            .buttonStyle(.plain)
+
+                            Button {
+                                viewModel.selectCreditType(.crew)
+                            } label: {
+                                HStack(alignment: .firstTextBaseline, spacing: 5) {
+                                    Text("Crew")
+                                        .shouldUnderline(!viewModel.creditTypeSelected)
+                                    Text("\(viewModel.entityDetail.credits.crew.count)")
+                                        .font(.caption)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.leading)
+                    }
+                    .listRowSeparator(.visible)
+                }
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    EntityHStack(displayObjects: viewModel.entityDetail.credits.displayObjects)
+                }
+            }
+            .listRowSeparator(.hidden)
+            .padding(.top)
+
             VStack(alignment: .leading, spacing: 10) {
                 NavigationLink(destination: AllImageView(navigationTitle: viewModel.mediaType.rawValue, imagesLink: viewModel.allDisplayImageLinks)) {
                     HStack {
@@ -74,7 +126,7 @@ struct EntityDetailView: View {
                                 HStack(alignment: .firstTextBaseline, spacing: 5) {
                                     Text("Backdrops")
                                         .shouldUnderline(viewModel.mediaSelected)
-                                    Text("\(viewModel.entityDetail.image?.backdrops.count ?? 0)")
+                                    Text("\(viewModel.entityDetail.images.backdrops.count)")
                                         .font(.caption)
                                 }
                             }
@@ -86,7 +138,7 @@ struct EntityDetailView: View {
                                 HStack(alignment: .firstTextBaseline, spacing: 5) {
                                     Text("Posters")
                                         .shouldUnderline(!viewModel.mediaSelected)
-                                    Text("\(viewModel.entityDetail.image?.posters.count ?? 0)")
+                                    Text("\(viewModel.entityDetail.images.posters.count)")
                                         .font(.caption)
                                 }
                             }

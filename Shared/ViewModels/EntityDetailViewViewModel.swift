@@ -15,6 +15,7 @@ class EntityDetailViewViewModel: ObservableObject {
     let navigationTitle: String
     var mediaType: MediaType = .backdrop
     var seeAlsoType: SeeAlsoType = .recommend
+    @Published var creditTypeSelected: Bool = true
     @Published var mediaSelected: Bool = true
     @Published var seeAlsoTypeSelected: Bool = true
     @Published var entityDetail: DisplayObject = DisplayObject(id: 0, type: .movie, titleWithYear: "", title: "", backdropLink: "", posterLink: "", overview: "", tagline: "")
@@ -24,7 +25,7 @@ class EntityDetailViewViewModel: ObservableObject {
     }
 
     var allDisplayImageLinks: [String] {
-        return mediaType == .backdrop ? (entityDetail.image?.backdropLinks ?? []) : (entityDetail.image?.posterLinks ?? [])
+        return mediaType == .backdrop ? entityDetail.images.backdropLinks: entityDetail.images.posterLinks
     }
 
     enum MediaType: String {
@@ -52,10 +53,10 @@ class EntityDetailViewViewModel: ObservableObject {
         mediaSelected.toggle()
         switch type {
         case .backdrop:
-            entityDetail.displayImageLinks = entityDetail.image?.backdropLinks.getPrefix(5) ?? []
+            entityDetail.displayImageLinks = entityDetail.images.backdropLinks.getPrefix(5)
             mediaType = .backdrop
         case .poster:
-            entityDetail.displayImageLinks = entityDetail.image?.posterLinks.getPrefix(5) ?? []
+            entityDetail.displayImageLinks = entityDetail.images.posterLinks.getPrefix(5)
             mediaType = .poster
         }
     }
@@ -67,12 +68,17 @@ class EntityDetailViewViewModel: ObservableObject {
 
         switch type {
         case .recommend:
-            entityDetail.displaySameObjects = entityDetail.recommends
+            entityDetail.displaySameObjects = entityDetail.recommendations
             seeAlsoType = .recommend
         case .similar:
-            entityDetail.displaySameObjects = entityDetail.similars
+            entityDetail.displaySameObjects = entityDetail.similar
             seeAlsoType = .similar
         }
+    }
+
+    func selectCreditType(_ type: Credit.DisplayType) {
+        creditTypeSelected.toggle()
+        entityDetail.credits.displayType = type
     }
 
     func resetSelection() {
@@ -80,6 +86,8 @@ class EntityDetailViewViewModel: ObservableObject {
         mediaType = .backdrop
         seeAlsoTypeSelected = true
         seeAlsoType = .recommend
+        creditTypeSelected = true
+        entityDetail.credits.displayType = .cast
     }
 }
 
@@ -89,23 +97,12 @@ class MovieDetailViewViewModel: EntityDetailViewViewModel {
     override func fetchDetail() async throws {
         do {
             let detailResponse = try await movieDB.detail(id: id).get()
-            let imageResponse = try await movieDB.images(id: id, language: "").get()
-            let recommendMovieResponse = try await movieDB.recommendations(id: id).get()
-            let similarMovieResponse = try await movieDB.similars(id: id).get()
-
             entityDetail = detailResponse.displayObject
-            entityDetail.image = imageResponse
-            entityDetail.displayImageLinks = imageResponse.backdropLinks.getPrefix(5)
-            entityDetail.recommends = recommendMovieResponse.displayObjects
-            entityDetail.similars = similarMovieResponse.displayObjects
-            entityDetail.totalRecommends = recommendMovieResponse.totalResults
-            entityDetail.totalSimilars = similarMovieResponse.totalResults
-            entityDetail.displaySameObjects = recommendMovieResponse.displayObjects
+            print(detailResponse.images.backdrops.count)
         } catch let error {
             print(error)
         }
     }
-
 }
 
 class TVShowDetailViewViewModel: EntityDetailViewViewModel {
@@ -113,25 +110,15 @@ class TVShowDetailViewViewModel: EntityDetailViewViewModel {
     
     override func fetchDetail() async throws {
         do {
-            let detailResponse = try await tvshowDB.detail(id: id).get()
-            let imageResponse = try await tvshowDB.images(id: id, language: "").get()
-            let recommendTVShowResponse = try await tvshowDB.recommendations(id: id).get()
-            let similarTVShowResponse = try await tvshowDB.similar(id: id).get()
-
+            let detailResponse = try await tvshowDB.detail(id: id, language: "").get()
             entityDetail = detailResponse.displayObject
-            entityDetail.image = imageResponse
-            entityDetail.displayImageLinks = imageResponse.backdropLinks.getPrefix(5)
-
-            entityDetail = detailResponse.displayObject
-            entityDetail.image = imageResponse
-            entityDetail.displayImageLinks = imageResponse.backdropLinks.getPrefix(5)
-            entityDetail.recommends = recommendTVShowResponse.displayObjects
-            entityDetail.similars = similarTVShowResponse.displayObjects
-            entityDetail.totalRecommends = recommendTVShowResponse.totalResults
-            entityDetail.totalSimilars = similarTVShowResponse.totalResults
-            entityDetail.displaySameObjects = recommendTVShowResponse.displayObjects
+            print(detailResponse.similar)
         } catch let error {
             print(error)
         }
     }
+}
+
+class PeopleDetailViewViewModel: EntityDetailViewViewModel {
+    
 }
