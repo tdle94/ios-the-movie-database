@@ -100,7 +100,7 @@ struct EntityDetailView: View {
                 }
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    EntityHStack(displayObjects: viewModel.entityDetail.credits.displayObjects)
+                    EntityHStack(displayObjects: viewModel.entityDetail.credits.displayObjects.getPrefix(10))
                 }
             }
             .listRowSeparator(.hidden)
