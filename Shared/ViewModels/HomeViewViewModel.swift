@@ -13,11 +13,11 @@ class HomeViewViewModel: ObservableObject {
     @ObservedObject var movieFetcherViewModel = MovieFetcherViewModel()
     @ObservedObject var tvShowFetcherViewModel = TVShowFetcherViewModel()
 
-    @Published var displayObjects: [DisplayObject] = []
-    @Published var displayObjects1: [DisplayObject] = []
-    @Published var displayObjects2: [DisplayObject] = []
-    @Published var displayObjects3: [DisplayObject] = []
-    @Published var latest: DisplayObject?
+    @Published var displayObjects: [EntityTypeDisplay] = []
+    @Published var displayObjects1: [EntityTypeDisplay] = []
+    @Published var displayObjects2: [EntityTypeDisplay] = []
+    @Published var displayObjects3: [EntityTypeDisplay] = []
+    @Published var latest: EntityTypeDisplay = EntityTypeDisplay(id: -1, title: "", subtitle: "", posterLink: "", type: .movie)
 
     @Published var hideInitialProgressView = false
     @Published var hideError = false
@@ -53,7 +53,9 @@ class HomeViewViewModel: ObservableObject {
             Task {
                 try await movieFetcherViewModel.fetch()
                 
-                latest = movieFetcherViewModel.latestMovieViewModel.homeViewObjects.first
+                if let latest = movieFetcherViewModel.latestMovieViewModel.homeViewObjects.first {
+                    self.latest = latest
+                }
                 displayObjects = movieFetcherViewModel.nowPlayingMovieViewModel.homeViewObjects
                 displayObjects1 = movieFetcherViewModel.upcomingMovieViewModel.homeViewObjects
                 displayObjects2 = movieFetcherViewModel.popularMovieViewModel.homeViewObjects
@@ -72,7 +74,10 @@ class HomeViewViewModel: ObservableObject {
 
                 try await tvShowFetcherViewModel.fetch()
 
-                latest = tvShowFetcherViewModel.latestTVShowViewModel.homeViewObjects.first
+                if let latest = tvShowFetcherViewModel.latestTVShowViewModel.homeViewObjects.first {
+                    self.latest = latest
+                }
+
                 displayObjects = tvShowFetcherViewModel.airingTodayTVShowViewModel.homeViewObjects
                 displayObjects1 = tvShowFetcherViewModel.onTheAirTVShowViewModel.homeViewObjects
                 displayObjects2 = tvShowFetcherViewModel.popularTVShowViewModel.homeViewObjects

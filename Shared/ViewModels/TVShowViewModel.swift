@@ -13,7 +13,7 @@ import SwiftUI
 class TVShowViewModel: ObservableObject {
     let tvShowDB = TVShowDB()
 
-    @Published var homeViewObjects: [DisplayObject] = []
+    @Published var homeViewObjects: [EntityTypeDisplay] = []
     @Published var latestMovieImageURL: URL?
 
     func fetch() async throws {
@@ -51,7 +51,7 @@ class AiringTodayTVShowViewModel: TVShowViewModel {
 
 class LatestTVShowViewModel: TVShowViewModel {
     override func fetch() async throws {
-        let latestTVShowResult = try await tvShowDB.latest(language: Locale.currentCountryAndLanguageCode).get()
-        homeViewObjects = [latestTVShowResult.displayObject]
+        let latestTVShowResult = try await tvShowDB.latest().get()
+        homeViewObjects = [EntityTypeDisplay(id: latestTVShowResult.id, title: latestTVShowResult.name, subtitle: latestTVShowResult.overview, posterLink: latestTVShowResult.posterLink, type: .tvshow)]
     }
 }

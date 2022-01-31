@@ -13,29 +13,21 @@ import SwiftUI
 class EntityDetailViewViewModel: ObservableObject {
     let id: Int
     let navigationTitle: String
-    var mediaType: MediaType = .backdrop
-    var seeAlsoType: SeeAlsoType = .recommend
     @Published var creditTypeSelected: Bool = true
     @Published var mediaSelected: Bool = true
     @Published var seeAlsoTypeSelected: Bool = true
-    @Published var entityDetail: DisplayObject = DisplayObject(id: 0, type: .movie, titleWithYear: "", title: "", backdropLink: "", posterLink: "", overview: "", tagline: "")
+    @Published var entityDetail: DisplayDetail = DisplayDetail(id: -1,
+                                                               title: "",
+                                                               overview: "",
+                                                               tagline: "",
+                                                               backdropLink: "",
+                                                               posterLink: "",
+                                                               releaseDate: "",
+                                                               credits: .init(),
+                                                               images: .init())
 
     var imageWidth: CGFloat {
-        return mediaType == .backdrop ? 500 : 200
-    }
-
-    var allDisplayImageLinks: [String] {
-        return mediaType == .backdrop ? entityDetail.images.backdropLinks: entityDetail.images.posterLinks
-    }
-
-    enum MediaType: String {
-        case backdrop = "Backdrops"
-        case poster = "Posters"
-    }
-    
-    enum SeeAlsoType: String {
-        case similar = "Similars"
-        case recommend = "Recommends"
+        return entityDetail.imageSelection == .backdrops ? 500 : 200
     }
 
     init(id: Int, navigationTitle: String) {
@@ -47,33 +39,16 @@ class EntityDetailViewViewModel: ObservableObject {
         // Implement in subview
     }
 
-    func selectMediaType(_ type: MediaType) {
-        guard type != mediaType else { return }
-
+    func selectMediaType(_ type: ImageSelectionType) {
+        guard entityDetail.imageSelection != type else { return }
         mediaSelected.toggle()
-        switch type {
-        case .backdrop:
-            entityDetail.displayImageLinks = entityDetail.images.backdropLinks.getPrefix(5)
-            mediaType = .backdrop
-        case .poster:
-            entityDetail.displayImageLinks = entityDetail.images.posterLinks.getPrefix(5)
-            mediaType = .poster
-        }
+        entityDetail.imageSelection = type
     }
 
-    func selectSeeAlsoType(_ type: SeeAlsoType) {
-        guard seeAlsoType != type else { return }
-
+    func selectSeeAlsoType(_ type: EntitySelectionType) {
+        guard entityDetail.entitySelection != type else { return }
         seeAlsoTypeSelected.toggle()
-
-        switch type {
-        case .recommend:
-            entityDetail.displaySameObjects = entityDetail.recommendations
-            seeAlsoType = .recommend
-        case .similar:
-            entityDetail.displaySameObjects = entityDetail.similar
-            seeAlsoType = .similar
-        }
+        entityDetail.entitySelection = type
     }
 
     func selectCreditType(_ type: Credit.DisplayType) {
@@ -83,9 +58,9 @@ class EntityDetailViewViewModel: ObservableObject {
 
     func resetSelection() {
         mediaSelected = true
-        mediaType = .backdrop
+        entityDetail.imageSelection = .backdrops
         seeAlsoTypeSelected = true
-        seeAlsoType = .recommend
+        entityDetail.entitySelection = .recommendation
         creditTypeSelected = true
         entityDetail.credits.displayType = .cast
     }
@@ -98,7 +73,6 @@ class MovieDetailViewViewModel: EntityDetailViewViewModel {
         do {
             let detailResponse = try await movieDB.detail(id: id).get()
             entityDetail = detailResponse.displayObject
-            print(detailResponse.images.backdrops.count)
         } catch let error {
             print(error)
         }
@@ -112,7 +86,6 @@ class TVShowDetailViewViewModel: EntityDetailViewViewModel {
         do {
             let detailResponse = try await tvshowDB.detail(id: id, language: "").get()
             entityDetail = detailResponse.displayObject
-            print(detailResponse.similar)
         } catch let error {
             print(error)
         }

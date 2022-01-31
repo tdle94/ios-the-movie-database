@@ -11,7 +11,7 @@ import TMDBAPI
 @MainActor
 class SearchViewViewModel: ObservableObject {
     let searchDB = SearchDB()
-    @Published var searchResult: [DisplayObject] = []
+    @Published var searchResult: [EntityTypeDisplay] = []
     @Published var searchText: String = ""
     private(set) var oldSearchText: String = ""
     private(set) var loadMore: Bool = false
