@@ -7,15 +7,16 @@
 
 import Foundation
 import TMDBAPI
+import SwiftUI
 
-extension DisplayObject {
+extension EntityTypeDisplay {
     @MainActor
-    var detailViewViewModel: EntityDetailView {
+    var detailView: EntityDetailView {
         if type == .movie {
             return EntityDetailView(viewModel: MovieDetailViewViewModel(id: id, navigationTitle: title))
         } else if type == .tvshow {
             return EntityDetailView(viewModel: TVShowDetailViewViewModel(id: id, navigationTitle: title))
         }
-        return EntityDetailView(viewModel: PeopleDetailViewViewModel(id: 0, navigationTitle: ""))
+        return EntityDetailView(viewModel: PeopleDetailViewViewModel(id: id, navigationTitle: title))
     }
 }
