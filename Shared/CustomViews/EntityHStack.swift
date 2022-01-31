@@ -9,7 +9,7 @@ import SwiftUI
 import TMDBAPI
 
 struct EntityHStack: View {
-    var displayObjects: [DisplayObject]
+    var displayObjects: [EntityTypeDisplay]
 
     var body: some View {
         LazyHStack {

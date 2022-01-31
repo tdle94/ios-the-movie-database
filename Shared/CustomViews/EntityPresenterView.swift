@@ -9,7 +9,7 @@ import SwiftUI
 import TMDBAPI
 
 struct EntityPresenterView: View {
-    var displayObject: DisplayObject
+    var displayObject: EntityTypeDisplay
 
     var body: some View {
         AsyncImage(url: URL(string: displayObject.posterLink), transaction: Transaction(animation: .linear)) { phase in
@@ -18,7 +18,7 @@ struct EntityPresenterView: View {
                 ProgressView()
                     .frame(width: 200, height: 300, alignment: .center)
             case .success(let image):
-                NavigationLink(destination: displayObject.detailViewViewModel) {
+                NavigationLink(destination: displayObject.detailView) {
                     VStack(alignment: .leading) {
                         image
                             .resizable()
@@ -31,7 +31,7 @@ struct EntityPresenterView: View {
                 }
                 .buttonStyle(.plain)
             case .failure:
-                NavigationLink(destination: displayObject.detailViewViewModel) {
+                NavigationLink(destination: displayObject.detailView) {
                     VStack(alignment: .leading) {
                         Image(uiImage: UIImage(named: "NoImage")!)
                             .resizable()
@@ -52,6 +52,6 @@ struct EntityPresenterView: View {
 
 struct EntityPresenterView_Previews: PreviewProvider {
     static var previews: some View {
-        EntityPresenterView(displayObject: DisplayObject(id: 0, type: .movie, title: "", posterLink: ""))
+        EntityPresenterView(displayObject: EntityTypeDisplay(id: -1, title: "", subtitle: "", posterLink: "", type: .movie))
     }
 }

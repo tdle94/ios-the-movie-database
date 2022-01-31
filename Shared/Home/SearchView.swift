@@ -9,11 +9,11 @@ import SwiftUI
 import TMDBAPI
 
 struct SearchView: View {
-    var searchResult: [DisplayObject]
+    var searchResult: [EntityTypeDisplay]
 
     var body: some View {
         ForEach(searchResult) { item in
-            NavigationLink(destination: item.detailViewViewModel) {
+            NavigationLink(destination: item.detailView) {
                 HStack(alignment: .center, spacing: 20) {
                     AsyncImage(url: URL(string: item.posterLink), transaction: Transaction(animation: .linear)) { phase in
                         switch phase {
@@ -37,7 +37,7 @@ struct SearchView: View {
                         Text(item.title)
                             .lineLimit(1)
                             .font(.headline)
-                        Text(item.overview)
+                        Text(item.subtitle)
                             .lineLimit(2)
                             .font(.body)
                     }

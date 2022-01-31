@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TMDBAPI
 
 struct EntityDetailView: View {
     @StateObject var viewModel: EntityDetailViewViewModel
@@ -114,14 +115,14 @@ struct EntityDetailView: View {
             .padding(.top)
 
             VStack(alignment: .leading, spacing: 10) {
-                NavigationLink(destination: AllImageView(navigationTitle: viewModel.mediaType.rawValue, imagesLink: viewModel.allDisplayImageLinks)) {
+                NavigationLink(destination: AllImageView(navigationTitle: viewModel.entityDetail.imageSelection.rawValue, imagesLink: viewModel.entityDetail.imageLinks)) {
                     HStack {
                         Text("Media")
                             .font(.headline)
                         
                         HStack(alignment: .firstTextBaseline, spacing: 10) {
                             Button {
-                                viewModel.selectMediaType(.backdrop)
+                                viewModel.selectMediaType(.backdrops)
                             } label: {
                                 HStack(alignment: .firstTextBaseline, spacing: 5) {
                                     Text("Backdrops")
@@ -133,7 +134,7 @@ struct EntityDetailView: View {
                             .buttonStyle(.plain)
 
                             Button {
-                                viewModel.selectMediaType(.poster)
+                                viewModel.selectMediaType(.posters)
                             } label: {
                                 HStack(alignment: .firstTextBaseline, spacing: 5) {
                                     Text("Posters")
@@ -151,7 +152,7 @@ struct EntityDetailView: View {
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHStack(alignment: .top, spacing: 0) {
-                        ForEach(viewModel.entityDetail.displayImageLinks, id: \.self) { path in
+                        ForEach(viewModel.entityDetail.imageLinks.getPrefix(5), id: \.self) { path in
                             AsyncImage(url: URL(string: path), transaction: Transaction(animation: .linear)) { phase in
                                 switch phase {
                                 case .empty:
@@ -182,19 +183,19 @@ struct EntityDetailView: View {
 
                         HStack(alignment: .firstTextBaseline, spacing: 10) {
                             Button {
-                                viewModel.selectSeeAlsoType(.recommend)
+                                viewModel.selectSeeAlsoType(.recommendation)
                             } label: {
                                 HStack(alignment: .firstTextBaseline, spacing: 5) {
                                     Text("Recommend")
                                         .shouldUnderline(viewModel.seeAlsoTypeSelected)
-                                    Text("\(viewModel.entityDetail.totalRecommends)")
+                                    Text("\(viewModel.entityDetail.totalRecommendations)")
                                         .font(.caption)
                                 }
                             }
                             .buttonStyle(.plain)
 
                             Button {
-                                viewModel.selectSeeAlsoType(.similar)
+                                viewModel.selectSeeAlsoType(.similars)
                             } label: {
                                 HStack(alignment: .firstTextBaseline, spacing: 5) {
                                     Text("Similar")
@@ -211,7 +212,7 @@ struct EntityDetailView: View {
                 }
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    EntityHStack(displayObjects: viewModel.entityDetail.displaySameObjects)
+                    EntityHStack(displayObjects: viewModel.entityDetail.entityToDisplay.getPrefix(10))
                 }
             }
             .listRowSeparator(.hidden)
