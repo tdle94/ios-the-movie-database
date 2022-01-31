@@ -43,14 +43,6 @@ struct EntityDetailView: View {
                 .font(.title2)
                 .listRowSeparator(.hidden)
             
-            HStack {
-                VStack {
-                    Text("Status")
-                        .bold()
-                        .font(.title3)
-                }
-            }
-            
             if !viewModel.entityDetail.tagline.isEmpty {
                 Text(viewModel.entityDetail.tagline)
                     .font(.body)
