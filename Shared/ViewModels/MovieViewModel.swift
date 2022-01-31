@@ -11,7 +11,7 @@ import SwiftUI
 
 @MainActor
 class MovieViewModel: ObservableObject {
-    @Published var homeViewObjects: [DisplayObject] = []
+    @Published var homeViewObjects: [EntityTypeDisplay] = []
 
     let movieDB = MovieDB()
     
@@ -50,8 +50,8 @@ class TopRatedMovieViewModel: MovieViewModel {
 
 class LatestMovieViewModel: MovieViewModel {
     override func fetch() async throws {
-        let latestMovie = try await movieDB.latest(language: Locale.currentCountryAndLanguageCode).get()
+        let latestMovie = try await movieDB.latest().get()
         
-        homeViewObjects = [latestMovie.displayObject]
+        homeViewObjects = [EntityTypeDisplay(id: latestMovie.id, title: latestMovie.title, subtitle: latestMovie.overview, posterLink: latestMovie.posterLink, type: .movie)]
     }
 }
